@@ -59,10 +59,19 @@
             android:text="Reclamar!"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:text="Tomar foto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnFoto"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btnCancelar"
             android:text="Cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 </LinearLayout>
