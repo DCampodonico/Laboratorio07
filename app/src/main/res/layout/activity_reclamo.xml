@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="dam.isi.frsf.utn.edu.ar.laboratorio07.ReclamoActivity">
+    tools:context="dam.isi.frsf.utn.edu.ar.laboratorio07.ReclamoActivity"
+    android:theme="@style/Theme.AppCompat">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

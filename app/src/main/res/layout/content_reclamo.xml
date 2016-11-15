@@ -12,7 +12,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="dam.isi.frsf.utn.edu.ar.laboratorio07.ReclamoActivity"
-    tools:showIn="@layout/activity_reclamo">
+    tools:showIn="@layout/activity_reclamo"
+    android:theme="@style/Base.Theme.AppCompat">
 
     <fragment
         android:id="@+id/map"
