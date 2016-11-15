@@ -2,6 +2,7 @@ package dam.isi.frsf.utn.edu.ar.laboratorio07;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,11 +16,19 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+
+import static dam.isi.frsf.utn.edu.ar.laboratorio07.AltaReclamoActivity.CODIGO_RESULTADO_ALTA_RECLAMO;
+import static dam.isi.frsf.utn.edu.ar.laboratorio07.AltaReclamoActivity.CODIGO_RESULTADO_ALTA_RECLAMO_OK;
+
+public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 	GoogleMap myMap;
 	private boolean flagPermisoPedido;
 	private static final int PERMISSION_REQUEST_ACCESS = 899;
+	private ArrayList<Reclamo> reclamos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,7 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 		SupportMapFragment mapFragment = (SupportMapFragment)
 				getSupportFragmentManager()
 						.findFragmentById(R.id.map);
+		reclamos = new ArrayList<>();
 		mapFragment.getMapAsync(this);
 	}
 
@@ -41,6 +51,7 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
 		myMap = googleMap;
+		myMap.setOnMapLongClickListener(this);
 		askForPermission();
 	}
 
@@ -100,5 +111,25 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 			return;
 		}
 		myMap.setMyLocationEnabled(true);
+	}
+
+	@Override
+	public void onMapLongClick(LatLng latLng) {
+		Intent i = new Intent(ReclamoActivity.this, AltaReclamoActivity.class);
+		i.putExtra("coordenadas", latLng);
+		startActivityForResult(i, CODIGO_RESULTADO_ALTA_RECLAMO);
+	}
+
+	protected void onActivityResult (int requestCode, int resultCode, Intent data){
+		if(resultCode == CODIGO_RESULTADO_ALTA_RECLAMO_OK){
+			Reclamo reclamo = (Reclamo) data.getSerializableExtra("reclamo");
+			myMap.addMarker(new MarkerOptions()
+					.position(reclamo.coordenadaUbicacion())
+					.draggable(true)
+					.title(getString(R.string.Reclamo_title) + reclamo.getEmail())
+					.snippet(reclamo.getTitulo()));
+			reclamos.add(reclamo);
+			Toast.makeText(getApplicationContext(), "Posición marcada", Toast.LENGTH_SHORT).show();
+		}
 	}
 }
