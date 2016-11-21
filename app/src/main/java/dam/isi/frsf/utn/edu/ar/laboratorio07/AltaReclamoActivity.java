@@ -30,7 +30,7 @@ public class AltaReclamoActivity extends AppCompatActivity {
     private EditText txtTelefono;
     private LatLng ubicacion;
 	public static Integer CODIGO_RESULTADO_ALTA_RECLAMO = 1;
-	public static Integer CODIGO_RESULTADO_ALTA_RECLAMO_OK = 0;
+	public static Integer CODIGO_RESULTADO_ALTA_RECLAMO_OK = 899;
 	static final int REQUEST_IMAGE_CAPTURE = 1;
 	static final int REQUEST_TAKE_PHOTO = 2;
 	private ImageView mImageView;
