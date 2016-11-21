@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import static dam.isi.frsf.utn.edu.ar.laboratorio07.AltaReclamoActivity.CODIGO_RESULTADO_ALTA_RECLAMO;
 import static dam.isi.frsf.utn.edu.ar.laboratorio07.AltaReclamoActivity.CODIGO_RESULTADO_ALTA_RECLAMO_OK;
 
-public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 	GoogleMap myMap;
 	private boolean flagPermisoPedido;
 	private static final int PERMISSION_REQUEST_ACCESS = 899;
@@ -58,7 +58,7 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 	public void onMapReady(GoogleMap googleMap) {
 		myMap = googleMap;
 		myMap.setOnMapLongClickListener(this);
-		myMap.setOnMarkerClickListener(this);
+		myMap.setOnInfoWindowClickListener(this);
 		askForPermission();
 	}
 
@@ -139,8 +139,23 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 		}
 	}
 
+	private void trazarItinerario(LatLng position, Double km) {
+		ArrayList<LatLng> reclamosCercanos = new ArrayList<>();
+		for(Reclamo reclamo : reclamos){
+			float result[] = new float[1];
+			Location.distanceBetween(position.latitude, position.longitude, reclamo.coordenadaUbicacion().latitude, reclamo.coordenadaUbicacion().longitude, result);
+			Log.d("APP", "trazarItinerario: " + result[0]);
+			if(result[0] <= 1000*km){
+				reclamosCercanos.add(reclamo.coordenadaUbicacion());
+			}
+		}
+		PolylineOptions polylineOptions = new PolylineOptions();
+		polylineOptions.addAll(reclamosCercanos);
+		myMap.addPolyline(polylineOptions);
+	}
+
 	@Override
-	public boolean onMarkerClick(final Marker marker) {
+	public void onInfoWindowClick(final Marker marker) {
 		final EditText edittext = new EditText(this);
 		edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -161,21 +176,5 @@ public class ReclamoActivity extends AppCompatActivity implements OnMapReadyCall
 		builder.setMessage("Buscar reclamos a no mas de");
 		builder.setView(edittext);
 		builder.show();
-		return false;
-	}
-
-	private void trazarItinerario(LatLng position, Double km) {
-		ArrayList<LatLng> reclamosCercanos = new ArrayList<>();
-		for(Reclamo reclamo : reclamos){
-			float result[] = new float[1];
-			Location.distanceBetween(position.latitude, position.longitude, reclamo.coordenadaUbicacion().latitude, reclamo.coordenadaUbicacion().longitude, result);
-			Log.d("APP", "trazarItinerario: " + result[0]);
-			if(result[0] <= 1000*km){
-				reclamosCercanos.add(reclamo.coordenadaUbicacion());
-			}
-		}
-		PolylineOptions polylineOptions = new PolylineOptions();
-		polylineOptions.addAll(reclamosCercanos);
-		myMap.addPolyline(polylineOptions);
 	}
 }
